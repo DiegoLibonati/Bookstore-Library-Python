@@ -1,24 +1,9 @@
-# Caches de Python
-__pycache__/
-*.py[cod]
-*.pyo
-
-# Entornos virtuales
-venv/
-.env/
-
-# Cache de linters/test
-.ruff_cache/
+venv
+__pycache__
 .pytest_cache/
-
-# Archivos de build/packaging
+.ruff_cache
 *.egg-info/
-dist/
-build/
 
-# Archivos de logs temporales
-*.log
-
-# Configuración de IDEs (opcional pero recomendable)
-.vscode/
-.idea/
+.env
+*.pyc
+*.pyo

@@ -1,6 +1,11 @@
-from library.models.book import Book
-from library.models.user import User
-from library.utils.exceptions import BookCantRented, BookCantReturn
+from bookstore.configs.logger_config import setup_logger
+from bookstore.constants.codes import CODE_ALREADY_EXISTS_BOOK_RENTED, CODE_ERROR_OUT_OF_STOCK, CODE_NOT_FOUND_RENTED_BOOK
+from bookstore.constants.messages import MESSAGE_ALREADY_EXISTS_BOOK_RENTED, MESSAGE_ERROR_OUT_OF_STOCK, MESSAGE_NOT_FOUND_RENTED_BOOK_BY_NAME
+from bookstore.models.book import Book
+from bookstore.models.user import User
+from bookstore.utils.exceptions import BusinessError, NotFoundError
+
+logger = setup_logger("Bookstore - user_premium.py")
 
 
 class UserPremium(User):
@@ -14,22 +19,17 @@ class UserPremium(User):
 
     def rent_book(self, book: Book) -> None:
         if book in self.rented_books:
-            raise BookCantRented(
-                f"You cannot rent this book because you already have {book.name} rented."
-            )
+            raise BusinessError(code=CODE_ALREADY_EXISTS_BOOK_RENTED, message=MESSAGE_ALREADY_EXISTS_BOOK_RENTED.format(name=book.name))
+
         if not book.stock:
-            raise BookCantRented(
-                "The book cannot be rented because it is out of stock."
-            )
+            raise BusinessError(code=CODE_ERROR_OUT_OF_STOCK, message=MESSAGE_ERROR_OUT_OF_STOCK.format(name=book.name))
 
         book.decrease_unit()
         self.__rented_books.append(book)
 
     def return_book(self, book: Book) -> None:
         if book not in self.rented_books:
-            raise BookCantReturn(
-                f"You can't return the {book.name} book because you don't have it rented."
-            )
+            raise NotFoundError(code=CODE_NOT_FOUND_RENTED_BOOK, message=MESSAGE_NOT_FOUND_RENTED_BOOK_BY_NAME.format(name=book.name))
 
         book.increase_unit()
         self.__rented_books.remove(book)
@@ -67,19 +67,17 @@ def main() -> None:
         units=5,
     )
 
-    user_premium = UserPremium(
-        name="Carlos", surname="Skere", address="Calle False 1234"
-    )
+    user_premium = UserPremium(name="Carlos", surname="Skere", address="Calle False 1234")
 
     user_premium.rent_book(book=la_clase_de_griego_book)
     user_premium.rent_book(book=gravity_falls_book)
     user_premium.rent_book(book=dracula_book)
 
-    print(user_premium)
+    logger.info(user_premium)
 
-    print(dracula_book)
-    print(la_clase_de_griego_book)
-    print(gravity_falls_book)
+    logger.info(dracula_book)
+    logger.info(la_clase_de_griego_book)
+    logger.info(gravity_falls_book)
 
 
 if __name__ == "__main__":

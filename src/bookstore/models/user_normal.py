@@ -1,6 +1,11 @@
-from library.models.book import Book
-from library.models.user import User
-from library.utils.exceptions import BookCantRented, NotBookToReturn
+from bookstore.configs.logger_config import setup_logger
+from bookstore.constants.codes import CODE_ERROR_BOOK_RETURN_REQUIRED, CODE_ERROR_OUT_OF_STOCK, CODE_NOT_FOUND_RENTED_BOOK
+from bookstore.constants.messages import MESSAGE_ERROR_BOOK_RETURN_REQUIRED, MESSAGE_ERROR_OUT_OF_STOCK, MESSAGE_NOT_FOUND_RENTED_BOOK
+from bookstore.models.book import Book
+from bookstore.models.user import User
+from bookstore.utils.exceptions import BusinessError, NotFoundError
+
+logger = setup_logger("Bookstore - user_normal.py")
 
 
 class UserNormal(User):
@@ -14,20 +19,17 @@ class UserNormal(User):
 
     def rent_book(self, book: Book) -> None:
         if self.rented_book:
-            raise BookCantRented(
-                f"You cannot rent another book, you must return {self.rented_book.name} before renting another one."
-            )
+            raise BusinessError(code=CODE_ERROR_BOOK_RETURN_REQUIRED, message=MESSAGE_ERROR_BOOK_RETURN_REQUIRED.format(name=self.rented_book.name))
+
         if not book.stock:
-            raise BookCantRented(
-                "The book cannot be rented because it is out of stock."
-            )
+            raise BusinessError(code=CODE_ERROR_OUT_OF_STOCK, message=MESSAGE_ERROR_OUT_OF_STOCK.format(name=book.name))
 
         book.decrease_unit()
         self.__rented_book = book
 
     def return_book(self) -> None:
         if not self.rented_book:
-            raise NotBookToReturn("You do not have any books to return.")
+            raise NotFoundError(code=CODE_NOT_FOUND_RENTED_BOOK, message=MESSAGE_NOT_FOUND_RENTED_BOOK)
 
         self.rented_book.increase_unit()
         self.__rented_book = None
@@ -62,21 +64,17 @@ def main() -> None:
         units=5,
     )
 
-    user_normal = UserNormal(
-        name="Pepe", surname="Alcachofaz", address="Calle False 123"
-    )
-    user_normal_2 = UserNormal(
-        name="Sergio", surname="Sorg", address="Calle False 12345"
-    )
+    user_normal = UserNormal(name="Pepe", surname="Alcachofaz", address="Calle False 123")
+    user_normal_2 = UserNormal(name="Sergio", surname="Sorg", address="Calle False 12345")
 
     user_normal.rent_book(book=dracula_book)
 
-    print(user_normal)
-    print(user_normal_2)
+    logger.info(user_normal)
+    logger.info(user_normal_2)
 
-    print(dracula_book)
-    print(la_clase_de_griego_book)
-    print(gravity_falls_book)
+    logger.info(dracula_book)
+    logger.info(la_clase_de_griego_book)
+    logger.info(gravity_falls_book)
 
 
 if __name__ == "__main__":

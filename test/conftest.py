@@ -1,87 +1,36 @@
-from test.constants import MOCK_BOOK, MOCK_BOOK_WITHOUT_UNITS, MOCK_LIBRARY, MOCK_USER
-
 import pytest
 
-from library import Book, Library, UserNormal, UserPremium
+from bookstore.manager import Manager
+from bookstore.models.book import Book
+from bookstore.models.user_normal import UserNormal
+from bookstore.models.user_premium import UserPremium
 
 
 @pytest.fixture
-def book(book_dict: dict[str, str | int]) -> Book:
-    name = book_dict["name"]
-    description = book_dict["description"]
-    author = book_dict["author"]
-    units = book_dict["units"]
-    banner_url = book_dict["banner_url"]
-
-    return Book(
-        name=name,
-        description=description,
-        author=author,
-        units=units,
-        banner_url=banner_url,
-    )
+def book() -> Book:
+    return Book(name="Drácula", description="Novela gótica de Bram Stoker.", author="Bram Stoker", units=5)
 
 
 @pytest.fixture
-def book_without_units(book_without_units_dict: dict[str, str | int]) -> Book:
-    name = book_without_units_dict["name"]
-    description = book_without_units_dict["description"]
-    author = book_without_units_dict["author"]
-    units = book_without_units_dict["units"]
-    banner_url = book_without_units_dict["banner_url"]
-
-    return Book(
-        name=name,
-        description=description,
-        author=author,
-        units=units,
-        banner_url=banner_url,
-    )
+def book_no_stock() -> Book:
+    return Book(name="Sin Stock", description="Libro sin stock.", author="Autor Desconocido", units=0)
 
 
 @pytest.fixture
-def user_normal(user_dict: dict[str, str]) -> UserNormal:
-    name = user_dict["name"]
-    surname = user_dict["surname"]
-    address = user_dict["address"]
-
-    return UserNormal(name=name, surname=surname, address=address)
+def book_secondary() -> Book:
+    return Book(name="Gravity Falls", description="Libro misterioso.", author="Alex Hirsch", units=3)
 
 
 @pytest.fixture
-def user_premium(user_dict: dict[str, str]) -> UserPremium:
-    name = user_dict["name"]
-    surname = user_dict["surname"]
-    address = user_dict["address"]
-
-    return UserPremium(name=name, surname=surname, address=address)
+def user_normal() -> UserNormal:
+    return UserNormal(name="Pepe", surname="Alcachofaz", address="Calle False 123")
 
 
 @pytest.fixture
-def library(library_dict: dict[str, str]) -> Library:
-    name = library_dict["name"]
-
-    return Library(
-        name=name,
-    )
-
-
-# Mocks
-@pytest.fixture
-def book_dict() -> dict[str, str | int]:
-    return MOCK_BOOK
+def user_premium() -> UserPremium:
+    return UserPremium(name="Carlos", surname="Skere", address="Calle False 1234")
 
 
 @pytest.fixture
-def book_without_units_dict() -> dict[str, str | int]:
-    return MOCK_BOOK_WITHOUT_UNITS
-
-
-@pytest.fixture
-def user_dict() -> dict[str, str]:
-    return MOCK_USER
-
-
-@pytest.fixture
-def library_dict() -> dict[str, str]:
-    return MOCK_LIBRARY
+def manager() -> Manager:
+    return Manager(name="Libreria Test")

@@ -1,10 +1,12 @@
 from uuid import uuid4
 
+from bookstore.configs.logger_config import setup_logger
+
+logger = setup_logger("Bookstore - book.py")
+
 
 class Book:
-    def __init__(
-        self, name: str, description: str, author: str, units: int, banner_url: str = ""
-    ) -> None:
+    def __init__(self, name: str, description: str, author: str, units: int, banner_url: str = "") -> None:
         self.__id = str(uuid4())
         self.__name = name
         self.__description = description
@@ -78,7 +80,8 @@ def main() -> None:
         author="Bram Stoker",
         units=20,
     )
-    print(book)
+
+    logger.info(book)
 
 
 if __name__ == "__main__":

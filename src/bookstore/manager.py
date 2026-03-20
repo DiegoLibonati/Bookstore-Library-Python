@@ -1,22 +1,27 @@
-from typing import Union, ValuesView
+from collections.abc import ValuesView
 
-from library.models.book import Book
-from library.models.user_normal import UserNormal
-from library.models.user_premium import UserPremium
-from library.utils.exceptions import (
-    BookNotFound,
-    BookNotValidError,
-    UserAlreadyExists,
-    UserNotFound,
-    UserNotValidError,
+from bookstore.configs.logger_config import setup_logger
+from bookstore.constants.codes import CODE_ALREADY_EXISTS_USER, CODE_NOT_FOUND_BOOK, CODE_NOT_FOUND_USER, CODE_NOT_VALID_BOOK, CODE_NOT_VALID_USER
+from bookstore.constants.messages import (
+    MESSAGE_ALREADY_EXISTS_USER,
+    MESSAGE_NOT_FOUND_BOOK,
+    MESSAGE_NOT_FOUND_USER,
+    MESSAGE_NOT_VALID_BOOK,
+    MESSAGE_NOT_VALID_USER,
 )
+from bookstore.models.book import Book
+from bookstore.models.user_normal import UserNormal
+from bookstore.models.user_premium import UserPremium
+from bookstore.utils.exceptions import ConflictError, NotFoundError, ValidationError
+
+logger = setup_logger("Bookstore - manager.py")
 
 
-class Library:
+class Manager:
     def __init__(self, name: str) -> None:
         self.__name = name
         self.__books: dict[str, Book] = {}
-        self.__users: dict[str, Union[UserNormal, UserPremium]] = {}
+        self.__users: dict[str, UserNormal | UserPremium] = {}
 
     @property
     def name(self) -> str:
@@ -27,7 +32,7 @@ class Library:
         return self.__books
 
     @property
-    def users(self) -> dict[str, Union[UserNormal, UserPremium]]:
+    def users(self) -> dict[str, UserNormal | UserPremium]:
         return self.__users
 
     @property
@@ -35,50 +40,50 @@ class Library:
         return self.__books.values()
 
     @property
-    def users_values(self) -> ValuesView[Union[UserNormal, UserPremium]]:
+    def users_values(self) -> ValuesView[UserNormal | UserPremium]:
         return self.__users.values()
 
     def register_user(self, user: UserNormal | UserPremium) -> None:
         if not user or not isinstance(user, UserNormal | UserPremium):
-            raise UserNotValidError("You must enter a valid user.")
+            raise ValidationError(code=CODE_NOT_VALID_USER, message=MESSAGE_NOT_VALID_USER)
         if user in self.users_values:
-            raise UserAlreadyExists(f"The user with id {user.id} already exists.")
+            raise ConflictError(code=CODE_ALREADY_EXISTS_USER, message=MESSAGE_ALREADY_EXISTS_USER)
         self.__users[user.id] = user
 
     def remove_user(self, user: UserNormal | UserPremium) -> None:
         if not user or not isinstance(user, UserNormal | UserPremium):
-            raise UserNotValidError("You must enter a valid user.")
+            raise ValidationError(code=CODE_NOT_VALID_USER, message=MESSAGE_NOT_VALID_USER)
         if user not in self.users_values:
-            raise UserNotFound("This user was not found.")
+            raise NotFoundError(code=CODE_NOT_FOUND_USER, message=MESSAGE_NOT_FOUND_USER)
 
         del self.__users[user.id]
 
     def add_book(self, book: Book) -> None:
         if not book or not isinstance(book, Book):
-            raise BookNotValidError("You must enter a valid book to add.")
+            raise ValidationError(code=CODE_NOT_VALID_BOOK, message=MESSAGE_NOT_VALID_BOOK)
         self.__books[book.id] = book
 
     def remove_book(self, book: Book) -> None:
         if not book or not isinstance(book, Book):
-            raise BookNotValidError("You must enter a valid book to add.")
+            raise ValidationError(code=CODE_NOT_VALID_BOOK, message=MESSAGE_NOT_VALID_BOOK)
         if book not in self.books_values:
-            raise BookNotFound("This book was not found.")
+            raise NotFoundError(code=CODE_NOT_FOUND_BOOK, message=MESSAGE_NOT_FOUND_BOOK.format(name=book.name))
 
         del self.__books[book.id]
 
     def rent_book(self, user: UserNormal | UserPremium, book: Book) -> None:
         if not user or not isinstance(user, UserNormal | UserPremium):
-            raise UserNotValidError("You must enter a valid user.")
+            raise ValidationError(code=CODE_NOT_VALID_USER, message=MESSAGE_NOT_VALID_USER)
         if not book or not isinstance(book, Book):
-            raise BookNotValidError("You must enter a valid book to add.")
+            raise ValidationError(code=CODE_NOT_VALID_BOOK, message=MESSAGE_NOT_VALID_BOOK)
 
         user.rent_book(book=book)
 
     def return_book(self, user: UserNormal | UserPremium, book: Book = None) -> None:
         if not user or not isinstance(user, UserNormal | UserPremium):
-            raise UserNotValidError("You must enter a valid user.")
+            raise ValidationError(code=CODE_NOT_VALID_USER, message=MESSAGE_NOT_VALID_USER)
         if book and not isinstance(book, Book):
-            raise BookNotValidError("You must enter a valid book to add.")
+            raise ValidationError(code=CODE_NOT_VALID_BOOK, message=MESSAGE_NOT_VALID_BOOK)
 
         if isinstance(user, UserPremium):
             user.return_book(book=book)
@@ -87,27 +92,22 @@ class Library:
         user.return_book()
 
     def str_users(self) -> None:
-        print(f"----- Library Users {self.name} -----")
+        logger.info(f"----- Library Users {self.name} -----")
         for user in self.users_values:
-            print(user)
+            logger.info(user)
 
     def str_books(self) -> None:
-        print(f"----- Library Books {self.name} -----")
+        logger.info(f"----- Library Books {self.name} -----")
         for book in self.books_values:
-            print(book)
+            logger.info(book)
 
     def __str__(self) -> str:
-        return (
-            f"----- Library {self.name} -----\n"
-            f"Library Name: {self.name}\n"
-            f"Library Users: {self.users_values}\n"
-            f"Library Books: {self.books_values}\n\n"
-        )
+        return f"----- Library {self.name} -----\nLibrary Name: {self.name}\nLibrary Users: {self.users_values}\nLibrary Books: {self.books_values}\n\n"
 
 
 def main() -> None:
     # Library
-    library = Library(name="Libreria LaRosca")
+    library = Manager(name="Libreria LaRosca")
 
     # Books
     dracula_book = Book(
@@ -130,15 +130,9 @@ def main() -> None:
     )
 
     # Users
-    user_normal = UserNormal(
-        name="Pepe", surname="Alcachofaz", address="Calle False 123"
-    )
-    user_normal_2 = UserNormal(
-        name="Sergio", surname="Sorg", address="Calle False 12345"
-    )
-    user_premium = UserPremium(
-        name="Carlos", surname="Skere", address="Calle False 1234"
-    )
+    user_normal = UserNormal(name="Pepe", surname="Alcachofaz", address="Calle False 123")
+    user_normal_2 = UserNormal(name="Sergio", surname="Sorg", address="Calle False 12345")
+    user_premium = UserPremium(name="Carlos", surname="Skere", address="Calle False 1234")
 
     library.register_user(user=user_normal)
     library.register_user(user=user_normal_2)
@@ -156,7 +150,7 @@ def main() -> None:
     library.return_book(user=user_normal)
     library.return_book(user=user_premium, book=dracula_book)
 
-    print(library)
+    logger.info(library)
     library.str_users()
     library.str_books()
 

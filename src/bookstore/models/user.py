@@ -22,12 +22,7 @@ class User(ABC):
         return self.__address
 
     def __str__(self) -> None:
-        return (
-            f"----- User {self.id} -----\n"
-            f"User ID: {self.id}\n"
-            f"User: {self.complete_name}\n"
-            f"User Adress: {self.address}\n\n"
-        )
+        return f"----- User {self.id} -----\nUser ID: {self.id}\nUser: {self.complete_name}\nUser Adress: {self.address}\n\n"
 
     @abstractmethod
     def rent_book(self) -> None:
