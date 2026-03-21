@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from uuid import uuid4
 
 
-class User(ABC):
+class UserModel(ABC):
     def __init__(self, name: str, surname: str, address: str) -> None:
         self.__id = str(uuid4())
         self.__name = name
@@ -22,7 +22,7 @@ class User(ABC):
         return self.__address
 
     def __str__(self) -> None:
-        return f"----- User {self.id} -----\nUser ID: {self.id}\nUser: {self.complete_name}\nUser Adress: {self.address}\n\n"
+        return f"----- UserModel {self.id} -----\nUser ID: {self.id}\nUser: {self.complete_name}\nUser Adress: {self.address}\n\n"
 
     @abstractmethod
     def rent_book(self) -> None:

@@ -18,7 +18,7 @@ The main goal is to explore and demonstrate best practices, patterns, and techno
 8. Install the package in editable mode: `pip install -e .`
 9. Run the project:
     1. From CLI: `python -m bookstore.manager`
-    2. Or import as a library in Python: `from bookstore import Manager, Book`
+    2. Or import as a library in Python: `from bookstore import Manager, BookModel`
 
 ### Pre-Commit for Development
 

@@ -1,13 +1,13 @@
 from .manager import Manager
-from .models.book import Book
-from .models.user import User
-from .models.user_normal import UserNormal
-from .models.user_premium import UserPremium
+from .models.book_model import BookModel
+from .models.user_model import UserModel
+from .models.user_normal_model import UserNormalModel
+from .models.user_premium_model import UserPremiumModel
 
 __all__ = [
     "Manager",
-    "Book",
-    "User",
-    "UserNormal",
-    "UserPremium",
+    "BookModel",
+    "UserModel",
+    "UserNormalModel",
+    "UserPremiumModel",
 ]

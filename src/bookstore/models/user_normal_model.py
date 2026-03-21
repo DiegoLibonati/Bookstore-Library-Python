@@ -1,23 +1,23 @@
 from bookstore.configs.logger_config import setup_logger
 from bookstore.constants.codes import CODE_ERROR_BOOK_RETURN_REQUIRED, CODE_ERROR_OUT_OF_STOCK, CODE_NOT_FOUND_RENTED_BOOK
 from bookstore.constants.messages import MESSAGE_ERROR_BOOK_RETURN_REQUIRED, MESSAGE_ERROR_OUT_OF_STOCK, MESSAGE_NOT_FOUND_RENTED_BOOK
-from bookstore.models.book import Book
-from bookstore.models.user import User
+from bookstore.models.book_model import BookModel
+from bookstore.models.user_model import UserModel
 from bookstore.utils.exceptions import BusinessError, NotFoundError
 
-logger = setup_logger("Bookstore - user_normal.py")
+logger = setup_logger("Bookstore - user_normal_model.py")
 
 
-class UserNormal(User):
+class UserNormalModel(UserModel):
     def __init__(self, name: str, surname: str, address: str) -> None:
         super().__init__(name=name, surname=surname, address=address)
-        self.__rented_book: Book = None
+        self.__rented_book: BookModel = None
 
     @property
-    def rented_book(self) -> Book:
+    def rented_book(self) -> BookModel:
         return self.__rented_book
 
-    def rent_book(self, book: Book) -> None:
+    def rent_book(self, book: BookModel) -> None:
         if self.rented_book:
             raise BusinessError(code=CODE_ERROR_BOOK_RETURN_REQUIRED, message=MESSAGE_ERROR_BOOK_RETURN_REQUIRED.format(name=self.rented_book.name))
 
@@ -36,7 +36,7 @@ class UserNormal(User):
 
     def __str__(self) -> None:
         return (
-            f"----- User Normal {self.id} -----\n"
+            f"----- User Normal Model {self.id} -----\n"
             f"User ID: {self.id}\n"
             f"User: {self.complete_name}\n"
             f"User Adress: {self.address}\n"
@@ -45,27 +45,27 @@ class UserNormal(User):
 
 
 def main() -> None:
-    dracula_book = Book(
+    dracula_book = BookModel(
         name="Drácula",
         description="Es una novela de fantasía gótica escrita por Bram Stoker, publicada en 1897.",
         author="Bram Stoker",
         units=20,
     )
-    la_clase_de_griego_book = Book(
+    la_clase_de_griego_book = BookModel(
         name="LA CLASE DE GRIEGO",
         description="En Seúl, una mujer asiste a clases de griego antiguo.",
         author="KANG, HAN",
         units=1,
     )
-    gravity_falls_book = Book(
+    gravity_falls_book = BookModel(
         name="Gravity Falls",
         description="Este libro está lleno de datos y confesiones escalofriantes para satisfacer tu curiosidad.",
         author="Alex Hirsch",
         units=5,
     )
 
-    user_normal = UserNormal(name="Pepe", surname="Alcachofaz", address="Calle False 123")
-    user_normal_2 = UserNormal(name="Sergio", surname="Sorg", address="Calle False 12345")
+    user_normal = UserNormalModel(name="Pepe", surname="Alcachofaz", address="Calle False 123")
+    user_normal_2 = UserNormalModel(name="Sergio", surname="Sorg", address="Calle False 12345")
 
     user_normal.rent_book(book=dracula_book)
 

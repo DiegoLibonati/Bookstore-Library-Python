@@ -1,23 +1,23 @@
 from bookstore.configs.logger_config import setup_logger
 from bookstore.constants.codes import CODE_ALREADY_EXISTS_BOOK_RENTED, CODE_ERROR_OUT_OF_STOCK, CODE_NOT_FOUND_RENTED_BOOK
 from bookstore.constants.messages import MESSAGE_ALREADY_EXISTS_BOOK_RENTED, MESSAGE_ERROR_OUT_OF_STOCK, MESSAGE_NOT_FOUND_RENTED_BOOK_BY_NAME
-from bookstore.models.book import Book
-from bookstore.models.user import User
+from bookstore.models.book_model import BookModel
+from bookstore.models.user_model import UserModel
 from bookstore.utils.exceptions import BusinessError, NotFoundError
 
 logger = setup_logger("Bookstore - user_premium.py")
 
 
-class UserPremium(User):
+class UserPremiumModel(UserModel):
     def __init__(self, name: str, surname: str, address: str) -> None:
         super().__init__(name=name, surname=surname, address=address)
-        self.__rented_books: list[Book] = []
+        self.__rented_books: list[BookModel] = []
 
     @property
-    def rented_books(self) -> list[Book]:
+    def rented_books(self) -> list[BookModel]:
         return self.__rented_books
 
-    def rent_book(self, book: Book) -> None:
+    def rent_book(self, book: BookModel) -> None:
         if book in self.rented_books:
             raise BusinessError(code=CODE_ALREADY_EXISTS_BOOK_RENTED, message=MESSAGE_ALREADY_EXISTS_BOOK_RENTED.format(name=book.name))
 
@@ -27,7 +27,7 @@ class UserPremium(User):
         book.decrease_unit()
         self.__rented_books.append(book)
 
-    def return_book(self, book: Book) -> None:
+    def return_book(self, book: BookModel) -> None:
         if book not in self.rented_books:
             raise NotFoundError(code=CODE_NOT_FOUND_RENTED_BOOK, message=MESSAGE_NOT_FOUND_RENTED_BOOK_BY_NAME.format(name=book.name))
 
@@ -48,26 +48,26 @@ class UserPremium(User):
 
 
 def main() -> None:
-    dracula_book = Book(
+    dracula_book = BookModel(
         name="Drácula",
         description="Es una novela de fantasía gótica escrita por Bram Stoker, publicada en 1897.",
         author="Bram Stoker",
         units=20,
     )
-    la_clase_de_griego_book = Book(
+    la_clase_de_griego_book = BookModel(
         name="LA CLASE DE GRIEGO",
         description="En Seúl, una mujer asiste a clases de griego antiguo.",
         author="KANG, HAN",
         units=1,
     )
-    gravity_falls_book = Book(
+    gravity_falls_book = BookModel(
         name="Gravity Falls",
         description="Este libro está lleno de datos y confesiones escalofriantes para satisfacer tu curiosidad.",
         author="Alex Hirsch",
         units=5,
     )
 
-    user_premium = UserPremium(name="Carlos", surname="Skere", address="Calle False 1234")
+    user_premium = UserPremiumModel(name="Carlos", surname="Skere", address="Calle False 1234")
 
     user_premium.rent_book(book=la_clase_de_griego_book)
     user_premium.rent_book(book=gravity_falls_book)

@@ -2,10 +2,10 @@ from uuid import uuid4
 
 from bookstore.configs.logger_config import setup_logger
 
-logger = setup_logger("Bookstore - book.py")
+logger = setup_logger("Bookstore - book_model.py")
 
 
-class Book:
+class BookModel:
     def __init__(self, name: str, description: str, author: str, units: int, banner_url: str = "") -> None:
         self.__id = str(uuid4())
         self.__name = name
@@ -63,7 +63,7 @@ class Book:
 
     def __str__(self) -> str:
         return (
-            f"----- Book {self.id} -----\n"
+            f"----- BookModel {self.id} -----\n"
             f"Book ID: {self.id}\n"
             f"Book Name: {self.name}\n"
             f"Book Description: {self.description}\n"
@@ -74,7 +74,7 @@ class Book:
 
 
 def main() -> None:
-    book = Book(
+    book = BookModel(
         name="Drácula",
         description="Es una novela de fantasía gótica escrita por Bram Stoker, publicada en 1897.",
         author="Bram Stoker",
