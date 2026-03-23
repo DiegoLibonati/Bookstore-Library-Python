@@ -46,6 +46,7 @@ No requirements.
 ```
 pre-commit==4.3.0
 pip-audit==2.7.3
+ruff==0.11.12
 ```
 
 #### Requirements.test.txt
