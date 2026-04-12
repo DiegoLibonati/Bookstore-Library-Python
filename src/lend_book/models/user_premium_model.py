@@ -1,11 +1,11 @@
-from bookstore.configs.logger_config import setup_logger
-from bookstore.constants.codes import CODE_ALREADY_EXISTS_BOOK_RENTED, CODE_ERROR_OUT_OF_STOCK, CODE_NOT_FOUND_RENTED_BOOK
-from bookstore.constants.messages import MESSAGE_ALREADY_EXISTS_BOOK_RENTED, MESSAGE_ERROR_OUT_OF_STOCK, MESSAGE_NOT_FOUND_RENTED_BOOK_BY_NAME
-from bookstore.models.book_model import BookModel
-from bookstore.models.user_model import UserModel
-from bookstore.utils.exceptions import BusinessError, NotFoundError
+from lend_book.configs.logger_config import setup_logger
+from lend_book.constants.codes import CODE_ALREADY_EXISTS_BOOK_RENTED, CODE_ERROR_OUT_OF_STOCK, CODE_NOT_FOUND_RENTED_BOOK
+from lend_book.constants.messages import MESSAGE_ALREADY_EXISTS_BOOK_RENTED, MESSAGE_ERROR_OUT_OF_STOCK, MESSAGE_NOT_FOUND_RENTED_BOOK_BY_NAME
+from lend_book.models.book_model import BookModel
+from lend_book.models.user_model import UserModel
+from lend_book.utils.exceptions import BusinessError, NotFoundError
 
-logger = setup_logger("Bookstore - user_premium.py")
+logger = setup_logger("lend-book - user_premium.py")
 
 
 class UserPremiumModel(UserModel):

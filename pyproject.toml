@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bookstore"
+name = "lend-book"
 version = "1.0.0"
-description = "Library management system implemented in Python to manage books and users. The system includes classes for normal and premium users, allowing registration, deletion and management of book loans and returns. Each book can have units available, and its inventory status is managed. Custom validations and exceptions are also included to handle common errors, such as invalid or missing users or books."
+description = "**LendBook** is a library management system built in Python using object-oriented programming principles. It provides a clean, structured API to manage an inventory of books and a registry of users, supporting the full lifecycle of book rentals and returns."
 requires-python = ">=3.11"
 
 [tool.setuptools.packages.find]
@@ -13,7 +13,7 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 pythonpath = "src"
-testpaths = ["test"]
+testpaths = ["tests"]
 python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"

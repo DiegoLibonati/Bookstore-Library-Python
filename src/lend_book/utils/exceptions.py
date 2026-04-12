@@ -1,5 +1,5 @@
-from bookstore.constants.codes import CODE_ERROR_INTERNAL_LIBRARY
-from bookstore.constants.messages import MESSAGE_ERROR_INTERNAL_LIBRARY
+from lend_book.constants.codes import CODE_ERROR_INTERNAL_LIBRARY
+from lend_book.constants.messages import MESSAGE_ERROR_INTERNAL_LIBRARY
 
 
 class BaseError(Exception):

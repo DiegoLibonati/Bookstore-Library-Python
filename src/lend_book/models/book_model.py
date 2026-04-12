@@ -1,8 +1,8 @@
 from uuid import uuid4
 
-from bookstore.configs.logger_config import setup_logger
+from lend_book.configs.logger_config import setup_logger
 
-logger = setup_logger("Bookstore - book_model.py")
+logger = setup_logger("lend-book - book_model.py")
 
 
 class BookModel:

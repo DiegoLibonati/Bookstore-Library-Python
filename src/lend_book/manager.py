@@ -1,20 +1,20 @@
 from collections.abc import ValuesView
 
-from bookstore.configs.logger_config import setup_logger
-from bookstore.constants.codes import CODE_ALREADY_EXISTS_USER, CODE_NOT_FOUND_BOOK, CODE_NOT_FOUND_USER, CODE_NOT_VALID_BOOK, CODE_NOT_VALID_USER
-from bookstore.constants.messages import (
+from lend_book.configs.logger_config import setup_logger
+from lend_book.constants.codes import CODE_ALREADY_EXISTS_USER, CODE_NOT_FOUND_BOOK, CODE_NOT_FOUND_USER, CODE_NOT_VALID_BOOK, CODE_NOT_VALID_USER
+from lend_book.constants.messages import (
     MESSAGE_ALREADY_EXISTS_USER,
     MESSAGE_NOT_FOUND_BOOK,
     MESSAGE_NOT_FOUND_USER,
     MESSAGE_NOT_VALID_BOOK,
     MESSAGE_NOT_VALID_USER,
 )
-from bookstore.models.book_model import BookModel
-from bookstore.models.user_normal_model import UserNormalModel
-from bookstore.models.user_premium_model import UserPremiumModel
-from bookstore.utils.exceptions import ConflictError, NotFoundError, ValidationError
+from lend_book.models.book_model import BookModel
+from lend_book.models.user_normal_model import UserNormalModel
+from lend_book.models.user_premium_model import UserPremiumModel
+from lend_book.utils.exceptions import ConflictError, NotFoundError, ValidationError
 
-logger = setup_logger("Bookstore - manager.py")
+logger = setup_logger("lend-book - manager.py")
 
 
 class Manager:
