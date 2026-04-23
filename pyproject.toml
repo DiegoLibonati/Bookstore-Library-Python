@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "lend-book"
 version = "1.0.0"
-description = "LendBook is a library management system built in Python using object-oriented programming principles. It provides a clean, structured API to manage an inventory of books and a registry of users, supporting the full lifecycle of book rentals and returns."
+description = "Lend Book is a library management system built in Python using object-oriented programming principles."
 requires-python = ">=3.11"
 
 [tool.setuptools.packages.find]

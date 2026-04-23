@@ -1,4 +1,4 @@
-# LendBook
+# Lend Book
 
 ## Educational Purpose
 
@@ -27,7 +27,7 @@ The main goal is to explore and demonstrate best practices, patterns, and techno
 
 ## Description
 
-**LendBook** is a library management system built in Python using object-oriented programming principles. It provides a clean, structured API to manage an inventory of books and a registry of users, supporting the full lifecycle of book rentals and returns.
+**Lend Book** is a library management system built in Python using object-oriented programming principles. It provides a clean, structured API to manage an inventory of books and a registry of users, supporting the full lifecycle of book rentals and returns.
 
 The system revolves around a central `Manager` class that acts as the single orchestrator for all operations. It maintains an in-memory catalog of books and a registry of users, each identified by a unique UUID. Through the `Manager`, you can register and remove users, add and remove books from the catalog, and process book rentals and returns — all with validation and business rules enforced at every step.
 
